@@ -1,1 +1,24 @@
+** Basic structure
+*** Introduction
+Who is this book for?
+*** What is an Operator?
+Why? Why Not?
+*** Operator Frameworks
+Kubebuilder
+Operator SDK
+client-go
+*** Convergence and Level-Triggering
+*** Interacting with the Kubernetes API
+*** Case Study: ??
+*** Solving Problems with Operators
+*** Working with External Systems
+*** Operator API Design
+*** Performance and Scalability
+*** Expanding the state of the world
+*** Case Study: Deployment Controller
+*** Advanced Topics
+Generations
+Admission Controllers
+Finalizers
+Owner References
 
