@@ -16,6 +16,7 @@ client-go
 *** Performance and Scalability
 *** Expanding the state of the world
 *** Case Study: Deployment Controller
+*** "Meta-operators"
 *** Advanced Topics
 Generations
 Admission Controllers
