@@ -1,6 +1,10 @@
 ** Basic structure
 *** Introduction
-Who is this book for?
+- What is this book about?
+- Who is this book for?
+- Why read this book?
+- How this book is organized
+- Notes, etc., on programming languages
 *** What is an Operator?
 Why? Why Not?
 *** Operator Frameworks
