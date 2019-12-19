@@ -15,6 +15,16 @@ client-go
 *** Interacting with the Kubernetes API
 *** Case Study: ??
 *** Solving Problems with Operators
+- This chapter needs to be meaty, but the preceding one shouldn't be
+  too simplistic - otherwise it'll hit like a truck...
+- Examples here should be cluster-internal, or mostly so
+- Probably want somewhere between 5-10 examples
+
+- Backing up a database
+- Cluster autoscaler
+- Scaling a database cluster with orchestration
+
+This might be the most important chapter.
 *** Working with External Systems
 *** Operator API Design
 *** Performance and Scalability
