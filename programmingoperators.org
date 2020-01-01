@@ -84,4 +84,18 @@ interfaces are still evolving as of this writing, but the community
 takes backwards-compatibility seriously, so I expect that the gist of
 the projects here will continue to function for quite some time.
 
+** What is an Operator?
+** Operator Frameworks
+** Convergence and Level-Triggering
+** Interacting with the Kubernetes API
+** Case Study: ??
+** Solving Problems with Operators
+** Working with External Systems
+** Operator API Design
+** Performance and Scalability
+** Expanding the state of the world
+** Case Study: Deployment Controller
+** "Meta-operators"
+** Advanced Topics
+** Testing?
 * Ideas
