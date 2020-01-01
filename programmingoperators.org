@@ -167,6 +167,11 @@ should start moving towards the new state.
 ** Interacting with the Kubernetes API
 ** Case Study: ??
 ** Solving Problems with Operators
+We've now covered all of the basics; it's time to dive in to some more
+realistic problems and discuss how to solve them with operators. This
+chapter will go in-depth with several real world problems and sketch
+out solutions.
+
 ** Working with External Systems
 ** Operator API Design
 ** Performance and Scalability
