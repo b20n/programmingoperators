@@ -164,6 +164,41 @@ should start moving towards the new state.
 
 ** Operator Frameworks
 ** Convergence and Level-Triggering
+While this book is largely focused on operators as a pattern for
+building systems on Kubernetes, it's worth keeping in mind that the
+basic ideas here don't have much to do with Kubernetes at all. In this
+chapter we'll take a step back from the pragmatic and get a little
+more grounding in the theory behind the practice. We'll swing back
+around to the "real thing" soon enough, newly armed with a deeper
+understand of the fundamentals. The key concepts are *declarativity*,
+*convergence*, and *level-triggering*. Maybe these are already
+familiar to you, or perhaps you have more of a practical bias; if
+that's the case, don't hesitate to skip forward. This chapter stands
+alone, and you can always come back to it.
+
+# Something to note here: we're not _really_ getting away from
+# Kubernetes here; the three concepts are all motivated by the
+# semantics of the Kubernetes API. Maybe this needs to be after the
+# "Interacting with the Kubernetes API" chapter?
+
+*** INPROGRESS Declarativity: what, not how
+# I'm not super happy with how this is fitting together. Maybe talk
+# about the interface concern second? Or say, "declarativity is a big
+# concept, but we're mostly going to talk about interfaces"?
+
+If you've been around programming circles for a while, there's a good
+chance you're already familiar with the the idea of "declarativity",
+and declarative vs. imperative. Declarative is about "what", and
+imperative is about "how", right? It's the difference between the
+elegance of mergesort in Haskell and the mechanical grind (and the
+beauty!) of Timsort in C. In the world of operators, declarativity is
+of supreme importance
+
+*** TODO Convergence
+
+*** TODO Level-triggering
+
+
 ** Interacting with the Kubernetes API
 ** Case Study: ??
 ** Solving Problems with Operators
