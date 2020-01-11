@@ -247,3 +247,14 @@ object storage bucket such as Amazon S3 or IBM's Cloud Object Storage.
 ** Advanced Topics
 ** Testing?
 * Ideas
+* Meta
+** Export code
+#+BEGIN_SRC elisp
+(defun org-export-programming-operators ()
+  (interactive)
+  (save-buffer)
+      (org-map-entries
+       (lambda ()
+         (org-html-export-to-html nil t t))
+       "CHAPTER"))
+#+END_SRC
