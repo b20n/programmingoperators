@@ -208,6 +208,37 @@ chapter will go in-depth with several real world problems and sketch
 out solutions.
 
 ** Working with External Systems
+One of the challenges of managing complex stateful systems is that
+they tend to be hard to "contain": their correct behavior depends on a
+range of technologies such as:
+
+- distributed consensus stores (etcd, chubby)
+- block storage volumes
+- object storage buckets
+
+These systems probably aren't running on top of Kubernetes and they're
+unlikely to be managed by the same operator as the system in question.
+To build a proper Kubernetes-native management tool for systems with
+these sorts of dependencies, the operator will need to interact with
+systems outside of its direct purview.
+
+The basic "stateful" primitives native to Kubernetes are a useful
+first step. The ~PersistentVolume~/~PersistentVolumeClaim~/~CSI~
+interfaces are more or less exactly what we're talking about: an
+bridge between the Kubernetes world and and the external world. It
+turns out that the Kubernetes authors have written the controllers
+themselves, so working with these abstractions is somewhat abstracted
+from what one might call and operator. But under the hood, it's a
+similar idea - a Kubernetes-native, resource-based interface to the
+lifecycle of an external stateful service.
+
+But what about other resources? What if we have to write the system
+ourselves, controller and all? Let's take as a concrete example an
+object storage bucket such as Amazon S3 or IBM's Cloud Object Storage.
+
+# Example where CRUD is embedded directly in the controller
+
+# Example with a custom resource and controller
 ** Operator API Design
 ** Performance and Scalability
 ** Expanding the state of the world
