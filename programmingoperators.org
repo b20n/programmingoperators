@@ -40,7 +40,11 @@ Owner References
 
 ** Testing?
 * Chapters
-** Introduction
+** Introduction                                                     :CHAPTER:
+:PROPERTIES:
+:EXPORT_FILE_NAME: dist/01-introduction
+:END:
+
 The rapid growth of Kubernetes <<>>
 
 The purpose of this book is not to discuss "consuming" operators as
