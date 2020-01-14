@@ -1,3 +1,7 @@
+#+HTML_DOCTYPE: html5
+#+HTML_HEAD:
+#+OPTIONS: html-style:nil html-scripts:nil html-postamble:nil
+#+OPTIONS: author:nil date:nil timestamp:nil
 * Refile
 * Outline
 ** Introduction
