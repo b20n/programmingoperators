@@ -92,7 +92,11 @@ interfaces are still evolving as of this writing, but the community
 takes backwards-compatibility seriously, so I expect that the gist of
 the projects here will continue to function for quite some time.
 
-** What is an Operator?
+** What is an Operator?                                             :CHAPTER:
+:PROPERTIES:
+:EXPORT_FILE_NAME: dist/02-what-is-an-operator
+:END:
+
 Managing the deployment and lifecycle of complex, stateful,
 distributed applications is hard work. It's spawned multiple fields -
 database administration and site reliability engineering, to name two
