@@ -174,7 +174,11 @@ should start moving towards the new state.
 
 << tie back to distributed systems >>
 
-** Operator Frameworks
+** Operator Frameworks                                              :CHAPTER:
+:PROPERTIES:
+:EXPORT_FILE_NAME: dist/03-operator-frameworks
+:END:
+
 ** Convergence and Level-Triggering
 While this book is largely focused on operators as a pattern for
 building systems on Kubernetes, it's worth keeping in mind that the
