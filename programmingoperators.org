@@ -179,7 +179,12 @@ should start moving towards the new state.
 :EXPORT_FILE_NAME: dist/03-operator-frameworks
 :END:
 
-** Convergence and Level-Triggering
+** Convergence and Level-Triggering                                 :CHAPTER:
+:PROPERTIES:
+:EXPORT_FILE_NAME: dist/04-convergence
+:END:
+
+
 While this book is largely focused on operators as a pattern for
 building systems on Kubernetes, it's worth keeping in mind that the
 basic ideas here don't have much to do with Kubernetes at all. In this
