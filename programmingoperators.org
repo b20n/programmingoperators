@@ -220,7 +220,11 @@ of supreme importance
 *** TODO Level-triggering
 
 
-** Interacting with the Kubernetes API
+** Interacting with the Kubernetes API                              :CHAPTER:
+:PROPERTIES:
+:EXPORT_FILE_NAME: dist/05-interacting-kubernetes-api
+:END:
+
 ** Case Study: ??
 ** Solving Problems with Operators
 We've now covered all of the basics; it's time to dive in to some more
