@@ -49,6 +49,10 @@ Owner References
 :EXPORT_FILE_NAME: dist/01-introduction
 :END:
 
+Welcome, and thanks for reading! As the title suggests, this is a book about
+programming "operators": software that manages software running on the
+Kubernetes containerization platform
+
 The rapid growth of Kubernetes <<>>
 
 The purpose of this book is not to discuss "consuming" operators as
