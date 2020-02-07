@@ -51,7 +51,13 @@ Owner References
 
 Welcome, and thanks for reading! As the title suggests, this is a book about
 programming "operators": software that manages software running on the
-Kubernetes containerization platform
+Kubernetes containerization platform. It's a book I wish I had when building my
+own operators-based control systems as well as when helping others build theirs.
+It's also a book about "why" - in part because I love asking "why" and getting
+to first principles; but also because although capital-O Operators and
+Kubernetes are this year's models, control loops, level-triggering and
+convergence stand on their own as valuable tools for thinking about and
+designing distributed systems. And distributed systems are forever.
 
 The rapid growth of Kubernetes <<>>
 
