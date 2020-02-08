@@ -283,7 +283,27 @@ object storage bucket such as Amazon S3 or IBM's Cloud Object Storage.
 # Example where CRUD is embedded directly in the controller
 
 # Example with a custom resource and controller
-** Operator API Design
+** Operator API Design                                              :CHAPTER:
+As is common with much of computing, user experience is an
+oft-neglected part of building effective operators. Controller
+behavior really is the heart of the pattern, but it must not be
+forgotten that the ~CustomResourceDefinitions~ exposed by an operator
+are an interface. They're the entrypoint for humans and computers in
+to your system; if they're a mess, no one is going to be eager to use
+it. This goes for both inputs - the spec - and outputs - the status -
+of your ~CustomResourceDefinitions~. If this chapter we'll discuss
+several considerations in the interface arena:
+
+# This transition needs to improve
+
+- Make RBAC useful and use more CRDs
+- Use built-in types
+- Make generations meaningful
+- Use labels and annotations judiciously
+- Hide unnecessary complexity
+- Follow Kubernetes conventions
+- Don't accidentally make imperative interfaces
+
 ** Performance and Scalability
 ** Expanding the state of the world
 ** Case Study: Deployment Controller
