@@ -304,6 +304,64 @@ several considerations in the interface arena:
 - Follow Kubernetes conventions
 - Don't accidentally make imperative interfaces
 
+*** Make RBAC useful
+When surveying the state of the art in open-source operators it's
+common to see a one-to-one correspondence between an operator and a
+~CustomResourceDefinition~. Assuming these operators are all doing
+something useful, this is unfortunate for a couple of reasons:
+
+**** Fat CRDs and God Objects
+Analogous to the "god object" problem in object-oriented programming,
+"fat" CRDs provide interfaces (and require implementations!) that
+unecessarily couple systems across unrelated concerns. This can make
+programming against your operator difficult; "everything knows about
+everything" and its associated brittleness will leak in to your users'
+applications.
+
+Consider, for example, an operator for managing a PostgreSQL database
+that supports both provisioning the database and managing its backups.
+One way to express this would be to use a ~PostgreSQLInstance~ CRD
+with a ~Backups~ sub-field inside ~Status~:
+
+#+BEGIN_SRC yaml
+apiVersion: "api.programmingoperators.com/v1"
+kind: PostgreSQLInstance
+metadata:
+  name: my-psql
+spec:
+  replicas: 2
+status:
+  backups:
+  - 1581742748
+  - 1581656378
+#+END_SRC
+
+This will work, more or less, but it's definitely not ideal. For one,
+it leaves the user with no interface to work with an individual
+backup, e.g., to delete it. A more useful structure would abstract out
+a ~PostgreSQLBackup~ CRD and support operations directly against it,
+instead:
+
+#+BEGIN_SRC yaml
+apiVersion: "api.programmingoperators.com/v1"
+kind: PostgreSQLBackup
+metadata:
+  name: my-first-backup
+spec:
+  expires: 1584161978
+status:
+  state: completed
+#+END_SRC
+
+The operator can then expose a declarative interface for the backups -
+creating a ~PostgreSQLBackup~ causes a backup to be taken with the
+given specification, deleting one causes it to be deleted, etc.
+
+In general, looking to object-oriented programming patterns as a model
+for CRD design isn't a bad idea, though keep in mind they're not
+free - the single responsibility principle might be taking things a
+bit too far.
+
 ** Performance and Scalability
 ** Expanding the state of the world
 ** Case Study: Deployment Controller
