@@ -379,6 +379,24 @@ on instances.
 Users need to implement services with minimal responsibilities, and
 the tools to enable them are right in front of you. Use them!
 
+**** Use built-in types liberally
+
+Kubernetes is a pretty "big" system. It covers quite a lot of
+conceptual ground in the data represented by its basic functionality,
+from abstract concepts like ~Deployment~ and ~Pod~ to more concrete
+ones such as bytes of memory. When designing your CRD specifications,
+you can achieve a much more "native" look-and-feel if you adopt types
+from the upstream libraries directly.
+
+For example, if you're representing a resource, such as memory, don't
+ever do this:
+
+#+BEGIN_SRC go
+type MyCRDSpec struct {
+    memoryInBytes int32
+}
+#+END_SRC
+
 ** Performance and Scalability
 ** Expanding the state of the world
 ** Case Study: Deployment Controller
