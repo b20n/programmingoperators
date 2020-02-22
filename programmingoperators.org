@@ -296,7 +296,7 @@ several considerations in the interface arena:
 
 # This transition needs to improve
 
-- Make RBAC useful and use more CRDs
+- Use more CRDs
 - Use built-in types
 - Make generations meaningful
 - Use labels and annotations judiciously
@@ -304,19 +304,18 @@ several considerations in the interface arena:
 - Follow Kubernetes conventions
 - Don't accidentally make imperative interfaces
 
-*** Make RBAC useful
+*** Fat CRDs, God Objects, and RBAC
 When surveying the state of the art in open-source operators it's
 common to see a one-to-one correspondence between an operator and a
 ~CustomResourceDefinition~. Assuming these operators are all doing
-something useful, this is unfortunate for a couple of reasons:
+something useful, this is unfortunate for a couple of reasons.
 
-**** Fat CRDs and God Objects
-Analogous to the "god object" problem in object-oriented programming,
-"fat" CRDs provide interfaces (and require implementations!) that
-unecessarily couple systems across unrelated concerns. This can make
-programming against your operator difficult; "everything knows about
-everything" and its associated brittleness will leak in to your users'
-applications.
+First, off, analogous to the "god object" problem in object-oriented
+programming, "fat" CRDs provide interfaces (and require
+implementations!) that unecessarily couple systems across unrelated
+concerns. This can make programming against your operator difficult;
+"everything knows about everything" and its associated brittleness
+will leak in to your users' applications.
 
 Consider, for example, an operator for managing a PostgreSQL database
 that supports both provisioning the database and managing its backups.
@@ -361,6 +360,24 @@ In general, looking to object-oriented programming patterns as a model
 for CRD design isn't a bad idea, though keep in mind they're not
 free - the single responsibility principle might be taking things a
 bit too far.
+
+Carrying on a bit deeper with this PostgreSQL example, let's talk
+about RBAC. Kubernetes' role-based access control system is a
+tremendously important part of operators. In what other system can you
+get a fully-baked authz model for your distributed system, with all
+the bells, whistles, and integrations you could want, for free, out of
+the box? It is critical not to overlook RBAC when designing CRDs.
+
+In the first example above, where backups are embedded in the
+~PostgreSQLInstance~ CRD, it's impossible for a user to write a tool
+to delete a backup that cannot also delete the entire PostgreSQL
+instance, perhaps with all of its data! On the other hand, with the
+dedicated ~PostgreSQLBackup~ CRD, users can define fine-grained RBAC
+rules that permit manipulation of backups independent of permissions
+on instances.
+
+Users need to implement services with minimal responsibilities, and
+the tools to enable them are right in front of you. Use them!
 
 ** Performance and Scalability
 ** Expanding the state of the world
