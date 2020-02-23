@@ -392,17 +392,69 @@ For example, if you're representing a resource, such as memory, don't
 ever do this:
 
 #+BEGIN_SRC go
-type MyCRDSpec struct {
-    memoryInBytes int32
+type FooSpec struct {
+    // How much memory to allocate to a Foo
+    MemoryInBytes int32
 }
 #+END_SRC
+
+Instead, use a ~resource.Quantity~, just like Kubernetes resources do:
+
+#+BEGIN_SRC go
+type FooSpec struct {
+    // How much memory to allocate to a Foo
+    Memory resource.Quantity
+}
+#+END_SRC
+
+This approach allows both you and your users to take advantage of the
+work the Kubernetes authors have already done - parsing human-readable
+strings, efficient conversions under the hood, etc. And your users are
+already familiar with it - minimize cognitive burden!
+
+**** Make generations meaningful
+
+From an API consumer's point of view, one of the more challenging
+poarts of working with operators is understanding when a specific
+action is completed. This flows naturally from the declarative nature
+of Kubernetes: a successful response to an API call represents only
+the acceptance of a request - not its execution. For all the caller
+knows, that request may not be possible to satisfy, or the relevant
+controller may be out to lunch, or it may take a week to complete by
+design - it's not immediately obvious. This is a general problem for
+Kubernetes controllers. For example, try figuring out when an image
+change on a Deployment is completely rolled-out - it's not
+straightforward. Many controllers don't even bother to communicate
+convergence progress; those that do generally do is in an ad-hoc
+manner. It is unfortunately up to the user to understand the semantics
+of each resource-controller pair.
+
+As the designed of CRD-based operators this is a problem for you, too.
+And of course, there's no "right" answer - if there were, it'd be
+standardized. One thing that you can do, however, is to use resource
+generations. It's quite simple, and you should probably be using them
+anyway (see the chapter on performance).
+
+# In the performance chapter, note that this is review!
+
+Resource generations are part of the ~ObjectMeta~ struct embedded in
+every Kubernetes resource. Every time a resource's specification - not
+status, not labels, not annotations, but specifically the ~Spec~
+field - is mutated, the generation is atomically incremented by the
+API server.
+
+# Talk about the ad-hoc nature of ObservedGeneration
+# Note that ReplicationController is a good example of this
+
+
+1. 
 
 ** Performance and Scalability
 ** Expanding the state of the world
 ** Case Study: Deployment Controller
 ** "Meta-operators"
 ** Advanced Topics
-** Testing?
+** Testing?q
 * Ideas
 * Meta
 ** Export code
