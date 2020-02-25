@@ -443,8 +443,60 @@ status, not labels, not annotations, but specifically the ~Spec~
 field - is mutated, the generation is atomically incremented by the
 API server.
 
+For historical reasons, this works slightly differently for custom
+resources. By default, generations are never incremented for custom
+resources. In order to enable them, the "status" subresource must be
+enabled on the ~CustomResourceDefinition~, like this:
+
+#+BEGIN_SRC yaml
+apiVersion: programmingoperators.com/v1
+kind: CustomResourceDefinition
+metadata:
+  name: foo.programmingoperators.com
+spec:
+  group: programmingoperators.
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      subresources:
+        # status enables the status subresource.
+        status: {}
+#+END_SRC
+
+With the status resource enabled, writes to the custom resource -
+barring ~.metadata~ and ~.status~ fields - will increment the
+resource's ~.metadata.generation~ field.
+
+# Sidebar?
+Note: if you're working operators in the wild, and want to migrate
+existing resources to the support the status subresource, it is
+possible to mutate existing ~CustomResourceDefinitions~ to enable it.
+Do so with care, however: doing so will irrevocably destroy all
+existing data at ~.status~.
+
+With the status subresource enabled we need one more datum to tie the
+story together here: ~observedGeneration~. A resource's "observed
+generation" - ~.status.observedGeneration~ /typically/ represents an
+indication from the resource's controller that the resource's
+specification at that generation has been reflected in the state of
+the world. That is, from a caller's point of view, after mutating a
+resource and noting the returned resource's ~.metadata.generation~,
+one must simply wait for ~.metadata.observedGeneration >=
+.metadata.generation~. At this point, the caller's request has been
+"satisfied" in some sense.
+
+Do note that this mechanism is ad-hoc; a controller's definition of
+having "observed" a generation may be completely idiosyncratic. It's
+up to you as the controller author to clearly document - and make
+consistent - the semantics of ~.metadata.observedGeneration~ to help
+your users make effective use of your operators.
+
+# Link to https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/#status-subresource
+
 # Talk about the ad-hoc nature of ObservedGeneration
-# Note that ReplicationController is a good example of this
+# Note that StatefulSet, ReplicasSet, DaemonSet, and Deployment all
+# use this
 
 
 1. 
