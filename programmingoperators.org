@@ -1,5 +1,5 @@
 #+HTML_DOCTYPE: html5
-#+HTML_HEAD:
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="style.css" />
 #+OPTIONS: html-style:nil html-scripts:nil html-postamble:nil
 #+OPTIONS: author:nil date:nil timestamp:nil
 * Refile
@@ -543,6 +543,6 @@ your users make effective use of your operators.
        "CHAPTER"))
 #+END_SRC
 
-#+BEGIN_SRC bash
+#+BEGIN_SRC
 git subtree push --prefix dist origin gh-pages
 #+END_SRC
