@@ -239,7 +239,6 @@ of supreme importance
 :CUSTOM_ID: level-triggering
 :END:
 
-
 ** Interacting with the Kubernetes API                              :CHAPTER:
 :PROPERTIES:
 :EXPORT_FILE_NAME: dist/05-interacting-kubernetes-api
@@ -530,7 +529,7 @@ your users make effective use of your operators.
 ** Case Study: Deployment Controller
 ** "Meta-operators"
 ** Advanced Topics
-** Testing?q
+** Testing?
 * Ideas
 * Meta
 ** Export code
