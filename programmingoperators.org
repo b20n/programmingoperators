@@ -213,6 +213,10 @@ alone, and you can always come back to it.
 # "Interacting with the Kubernetes API" chapter?
 
 *** INPROGRESS Declarativity: what, not how
+:PROPERTIES:
+:CUSTOM_ID: declarativity
+:END:
+
 # I'm not super happy with how this is fitting together. Maybe talk
 # about the interface concern second? Or say, "declarativity is a big
 # concept, but we're mostly going to talk about interfaces"?
@@ -226,8 +230,14 @@ beauty!) of Timsort in C. In the world of operators, declarativity is
 of supreme importance
 
 *** TODO Convergence
+:PROPERTIES:
+:CUSTOM_ID: convergence
+:END:
 
 *** TODO Level-triggering
+:PROPERTIES:
+:CUSTOM_ID: level-triggering
+:END:
 
 
 ** Interacting with the Kubernetes API                              :CHAPTER:
@@ -309,6 +319,10 @@ several considerations in the interface arena:
 - Don't accidentally make imperative interfaces
 
 *** Fat CRDs, God Objects, and RBAC
+:PROPERTIES:
+:CUSTOM_ID: fat-crds
+:END:
+
 When surveying the state of the art in open-source operators it's
 common to see a one-to-one correspondence between an operator and a
 ~CustomResourceDefinition~. Assuming these operators are all doing
@@ -384,6 +398,9 @@ Users need to implement services with minimal responsibilities, and
 the tools to enable them are right in front of you. Use them!
 
 **** Use built-in types liberally
+:PROPERTIES:
+:CUSTOM_ID: types
+:END:
 
 Kubernetes is a pretty "big" system. It covers quite a lot of
 conceptual ground in the data represented by its basic functionality,
@@ -417,6 +434,9 @@ strings, efficient conversions under the hood, etc. And your users are
 already familiar with it - minimize cognitive burden!
 
 **** Make generations meaningful
+:PROPERTIES:
+:CUSTOM_ID: generations
+:END:
 
 From an API consumer's point of view, one of the more challenging
 poarts of working with operators is understanding when a specific
