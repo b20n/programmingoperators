@@ -520,6 +520,6 @@ your users make effective use of your operators.
   (save-buffer)
       (org-map-entries
        (lambda ()
-         (org-html-export-to-html nil t t))
+         (org-html-export-to-html nil t))
        "CHAPTER"))
 #+END_SRC
