@@ -542,3 +542,7 @@ your users make effective use of your operators.
          (org-html-export-to-html nil t))
        "CHAPTER"))
 #+END_SRC
+
+#+BEGIN_SRC bash
+git subtree push --prefix dist origin gh-pages
+#+END_SRC
