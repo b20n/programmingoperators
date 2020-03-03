@@ -284,6 +284,10 @@ object storage bucket such as Amazon S3 or IBM's Cloud Object Storage.
 
 # Example with a custom resource and controller
 ** Operator API Design                                              :CHAPTER:
+:PROPERTIES:
+:EXPORT_FILE_NAME: dist/09-operator-api-design
+:END:
+
 As is common with much of computing, user experience is an
 oft-neglected part of building effective operators. Controller
 behavior really is the heart of the pattern, but it must not be
