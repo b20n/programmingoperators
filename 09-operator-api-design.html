@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operator API Design</title>
+<meta name="generator" content="Org mode">
+</head>
+<body>
+<div id="content">
+<h1 class="title">Operator API Design</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org8894708">1. Fat CRDs, God Objects, and RBAC</a>
+<ul>
+<li><a href="#org00251ac">1.1. Use built-in types liberally</a></li>
+<li><a href="#org831e967">1.2. Make generations meaningful</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+As is common with much of computing, user experience is an
+oft-neglected part of building effective operators. Controller
+behavior really is the heart of the pattern, but it must not be
+forgotten that the <code>CustomResourceDefinitions</code> exposed by an operator
+are an interface. They're the entrypoint for humans and computers in
+to your system; if they're a mess, no one is going to be eager to use
+it. This goes for both inputs - the spec - and outputs - the status -
+of your <code>CustomResourceDefinitions</code>. If this chapter we'll discuss
+several considerations in the interface arena:
+</p>
+
+<ul class="org-ul">
+<li>Use more CRDs</li>
+<li>Use built-in types</li>
+<li>Make generations meaningful</li>
+<li>Use labels and annotations judiciously</li>
+<li>Hide unnecessary complexity</li>
+<li>Follow Kubernetes conventions</li>
+<li>Don't accidentally make imperative interfaces</li>
+</ul>
+
+<div id="outline-container-org8894708" class="outline-2">
+<h2 id="org8894708"><span class="section-number-2">1</span> Fat CRDs, God Objects, and RBAC</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+When surveying the state of the art in open-source operators it's
+common to see a one-to-one correspondence between an operator and a
+<code>CustomResourceDefinition</code>. Assuming these operators are all doing
+something useful, this is unfortunate for a couple of reasons.
+</p>
+
+<p>
+First, off, analogous to the "god object" problem in object-oriented
+programming, "fat" CRDs provide interfaces (and require
+implementations!) that unecessarily couple systems across unrelated
+concerns. This can make programming against your operator difficult;
+"everything knows about everything" and its associated brittleness
+will leak in to your users' applications.
+</p>
+
+<p>
+Consider, for example, an operator for managing a PostgreSQL database
+that supports both provisioning the database and managing its backups.
+One way to express this would be to use a <code>PostgreSQLInstance</code> CRD
+with a <code>Backups</code> sub-field inside <code>Status</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-yaml">apiVersion: "api.programmingoperators.com/v1"
+kind: PostgreSQLInstance
+metadata:
+  name: my-psql
+spec:
+  replicas: 2
+status:
+  backups:
+  - 1581742748
+  - 1581656378
+</pre>
+</div>
+
+<p>
+This will work, more or less, but it's definitely not ideal. For one,
+it leaves the user with no interface to work with an individual
+backup, e.g., to delete it. A more useful structure would abstract out
+a <code>PostgreSQLBackup</code> CRD and support operations directly against it,
+instead:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-yaml">apiVersion: "api.programmingoperators.com/v1"
+kind: PostgreSQLBackup
+metadata:
+  name: my-first-backup
+spec:
+  expires: 1584161978
+status:
+  state: completed
+</pre>
+</div>
+
+<p>
+The operator can then expose a declarative interface for the backups -
+creating a <code>PostgreSQLBackup</code> causes a backup to be taken with the
+given specification, deleting one causes it to be deleted, etc.
+</p>
+
+<p>
+In general, looking to object-oriented programming patterns as a model
+for CRD design isn't a bad idea, though keep in mind they're not
+free - the single responsibility principle might be taking things a
+bit too far.
+</p>
+
+<p>
+Carrying on a bit deeper with this PostgreSQL example, let's talk
+about RBAC. Kubernetes' role-based access control system is a
+tremendously important part of operators. In what other system can you
+get a fully-baked authz model for your distributed system, with all
+the bells, whistles, and integrations you could want, for free, out of
+the box? It is critical not to overlook RBAC when designing CRDs.
+</p>
+
+<p>
+In the first example above, where backups are embedded in the
+<code>PostgreSQLInstance</code> CRD, it's impossible for a user to write a tool
+to delete a backup that cannot also delete the entire PostgreSQL
+instance, perhaps with all of its data! On the other hand, with the
+dedicated <code>PostgreSQLBackup</code> CRD, users can define fine-grained RBAC
+rules that permit manipulation of backups independent of permissions
+on instances.
+</p>
+
+<p>
+Users need to implement services with minimal responsibilities, and
+the tools to enable them are right in front of you. Use them!
+</p>
+</div>
+
+<div id="outline-container-org00251ac" class="outline-3">
+<h3 id="org00251ac"><span class="section-number-3">1.1</span> Use built-in types liberally</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Kubernetes is a pretty "big" system. It covers quite a lot of
+conceptual ground in the data represented by its basic functionality,
+from abstract concepts like <code>Deployment</code> and <code>Pod</code> to more concrete
+ones such as bytes of memory. When designing your CRD specifications,
+you can achieve a much more "native" look-and-feel if you adopt types
+from the upstream libraries directly.
+</p>
+
+<p>
+For example, if you're representing a resource, such as memory, don't
+ever do this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #00ff00;">type</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: #ffff00;">FooSpec</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: #00ff00;">struct</span><span style="color: #000000; background-color: #7f7f7f;"> </span>{
+<span style="color: #cd00cd; background-color: #7f7f7f;">    </span><span style="color: brightgreen; font-style: italic;">//</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: brightgreen; font-style: italic;">How</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: brightgreen; font-style: italic;">much</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: brightgreen; font-style: italic;">memory</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: brightgreen; font-style: italic;">to</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: brightgreen; font-style: italic;">allocate</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: brightgreen; font-style: italic;">to</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: brightgreen; font-style: italic;">a</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: brightgreen; font-style: italic;">Foo</span>
+<span style="color: #cd00cd; background-color: #7f7f7f;">    </span>MemoryInBytes<span style="color: #000000; background-color: #7f7f7f;"> </span>int32
+}
+</pre>
+</div>
+
+<p>
+Instead, use a <code>resource.Quantity</code>, just like Kubernetes resources do:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-go"><span style="color: #00ff00;">type</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: #ffff00;">FooSpec</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: #00ff00;">struct</span><span style="color: #000000; background-color: #7f7f7f;"> </span>{
+<span style="color: #cd00cd; background-color: #7f7f7f;">    </span><span style="color: brightgreen; font-style: italic;">//</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: brightgreen; font-style: italic;">How</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: brightgreen; font-style: italic;">much</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: brightgreen; font-style: italic;">memory</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: brightgreen; font-style: italic;">to</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: brightgreen; font-style: italic;">allocate</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: brightgreen; font-style: italic;">to</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: brightgreen; font-style: italic;">a</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: brightgreen; font-style: italic;">Foo</span>
+<span style="color: #cd00cd; background-color: #7f7f7f;">    </span>Memory<span style="color: #000000; background-color: #7f7f7f;"> </span>resource.Quantity
+}
+</pre>
+</div>
+
+<p>
+This approach allows both you and your users to take advantage of the
+work the Kubernetes authors have already done - parsing human-readable
+strings, efficient conversions under the hood, etc. And your users are
+already familiar with it - minimize cognitive burden!
+</p>
+</div>
+</div>
+
+<div id="outline-container-org831e967" class="outline-3">
+<h3 id="org831e967"><span class="section-number-3">1.2</span> Make generations meaningful</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+From an API consumer's point of view, one of the more challenging
+poarts of working with operators is understanding when a specific
+action is completed. This flows naturally from the declarative nature
+of Kubernetes: a successful response to an API call represents only
+the acceptance of a request - not its execution. For all the caller
+knows, that request may not be possible to satisfy, or the relevant
+controller may be out to lunch, or it may take a week to complete by
+design - it's not immediately obvious. This is a general problem for
+Kubernetes controllers. For example, try figuring out when an image
+change on a Deployment is completely rolled-out - it's not
+straightforward. Many controllers don't even bother to communicate
+convergence progress; those that do generally do is in an ad-hoc
+manner. It is unfortunately up to the user to understand the semantics
+of each resource-controller pair.
+</p>
+
+<p>
+As the designed of CRD-based operators this is a problem for you, too.
+And of course, there's no "right" answer - if there were, it'd be
+standardized. One thing that you can do, however, is to use resource
+generations. It's quite simple, and you should probably be using them
+anyway (see the chapter on performance).
+</p>
+
+<p>
+Resource generations are part of the <code>ObjectMeta</code> struct embedded in
+every Kubernetes resource. Every time a resource's specification - not
+status, not labels, not annotations, but specifically the <code>Spec</code>
+field - is mutated, the generation is atomically incremented by the
+API server.
+</p>
+
+<p>
+For historical reasons, this works slightly differently for custom
+resources. By default, generations are never incremented for custom
+resources. In order to enable them, the "status" subresource must be
+enabled on the <code>CustomResourceDefinition</code>, like this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-yaml">apiVersion: programmingoperators.com/v1
+kind: CustomResourceDefinition
+metadata:
+  name: foo.programmingoperators.com
+spec:
+  group: programmingoperators.
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      subresources:
+        # status enables the status subresource.
+        status: {}
+</pre>
+</div>
+
+<p>
+With the status resource enabled, writes to the custom resource -
+barring <code>.metadata</code> and <code>.status</code> fields - will increment the
+resource's <code>.metadata.generation</code> field.
+</p>
+
+<p>
+Note: if you're working operators in the wild, and want to migrate
+existing resources to the support the status subresource, it is
+possible to mutate existing <code>CustomResourceDefinitions</code> to enable it.
+Do so with care, however: doing so will irrevocably destroy all
+existing data at <code>.status</code>.
+</p>
+
+<p>
+With the status subresource enabled we need one more datum to tie the
+story together here: <code>observedGeneration</code>. A resource's "observed
+generation" - <code>.status.observedGeneration</code> <i>typically</i> represents an
+indication from the resource's controller that the resource's
+specification at that generation has been reflected in the state of
+the world. That is, from a caller's point of view, after mutating a
+resource and noting the returned resource's <code>.metadata.generation</code>,
+one must simply wait for <code>.metadata.observedGeneration &gt;=
+.metadata.generation</code>. At this point, the caller's request has been
+"satisfied" in some sense.
+</p>
+
+<p>
+Do note that this mechanism is ad-hoc; a controller's definition of
+having "observed" a generation may be completely idiosyncratic. It's
+up to you as the controller author to clearly document - and make
+consistent - the semantics of <code>.metadata.observedGeneration</code> to help
+your users make effective use of your operators.
+</p>
+
+
+<ol class="org-ol">
+<li></li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
