@@ -79,6 +79,7 @@ div#content{
     max-width:calc(800px - (30px * 2));
     margin-right:auto;
     margin-left:auto;
+    padding-top:30px;
     padding-right:30px;
     padding-left:30px
 }
@@ -86,6 +87,7 @@ div#content{
     div#content{
         max-width:-webkit-calc(800px - (30px));
         max-width:calc(800px - (30px));
+        padding-top:15px;
         padding-right:15px;
         padding-left:15px
     }
