@@ -1,7 +1,7 @@
 #+HTML_DOCTYPE: html5
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="style.css" />
 #+OPTIONS: html-style:nil html-scripts:nil html-postamble:nil
-#+OPTIONS: author:nil date:nil timestamp:nil
+#+OPTIONS: author:nil date:nil timestamp:nil toc:nil
 * Refile
 * Outline
 ** Introduction
