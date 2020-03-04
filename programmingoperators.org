@@ -2,6 +2,7 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="style.css" />
 #+OPTIONS: html-style:nil html-scripts:nil html-postamble:nil
 #+OPTIONS: author:nil date:nil timestamp:nil toc:nil todo:nil
+#+OPTIONS: html-preamble:po-preamble
 * Refile
 * Outline
 ** Introduction
@@ -541,6 +542,9 @@ your users make effective use of your operators.
        (lambda ()
          (org-html-export-to-html nil t))
        "CHAPTER"))
+
+(defun po-preamble (_)
+  "<ul><li><a href=\"01-introduction.html\">Introduction</a></li></ul>")
 #+END_SRC
 
 #+BEGIN_SRC
