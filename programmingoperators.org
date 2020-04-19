@@ -108,51 +108,58 @@ the projects here will continue to function for quite some time.
 :EXPORT_FILE_NAME: dist/02-what-is-an-operator
 :END:
 
-Managing the deployment and lifecycle of complex, stateful,
-distributed applications is hard work. It's spawned multiple fields -
-database administration and site reliability engineering, to name two
-- and motivates deeply held architectural opinions. Microservices and
-functions-as-a-service wouldn't be what they are today if managing
-state was easy.
+The modern consumer expects Internet services that are always-on,
+fast, and cheap. These expectations place a burden on the shoulders of
+implementors and operators of these services, to deliver them in an
+economical fashion. Over the past twenty years there has been an
+explosion of tools, both technical and nontechnical, designed to meet
+this challenge. DevOps, Site Reliability Engineering,
+infrastructure-as-code, cattle-not-pets, containerization, NoSQL,
+Kubernetes, serverless - all of these have played a part in the
+evolution of the state of the art. To some extent the future is here
+(Kubernetes would be near-unthinkable by the average engineer in 2000,
+but is commonplace in 2020) but it's not evenly distributed.
 
-Kubernetes and similar tools have raised the level of abstraction for
-many developers and operators. Programmers today regularly treat
-entire datacenters effectively as a single computer. Servers as
-"cattle, not pets" is a maxim worn threabare by 2020, but even as
-recently as 2005 this would have been an incomprehensible and
-unrealizable idea. The future is here... But it is not evenly
-distributed. These new, powerful abstractions have been by and large
-focused on solving the simpler problems of stateless compute. Stateful
-services - databases, caches, message queues, etc. - have been left
-behind with their pets. It's not impossible to deploy stateful systes
-on Kubernetes - `StatefulSet`, `PersistentVolume`, and other
-abstractions are useful building blocks. To properly manage them,
-however, to reconfigure, upgrade, scale, or recover from failure,
-these systems generally require domain knowledge that simply cannot be
-encoded in Kubernetes.
+Many of these tools focus to near-exclusivity on the problems of
+stateless services, such as API servers and other so-called
+"microservices". This makes some sense; stateless services are
+relatively simple from an run-time point of view. But it's a rare
+stateless service that exists without the backing of a stateful
+system, such as a database or a message queue. And stateful systems
+are another beast entirely.
 
-An "operator" is software that implements these higher-level
-application-specific behaviors to enable automated management of
-complex stateful systems. Operators in Kubernetes utilize the
-`CustomResourceDefinition` resource to extend the Kubernetes API in to
-the domain of a specific application.
+Managing stateful systems effectively and economically - scaling,
+upgrading, reconfiguring, backing up, recoving from failure - requires
+careful application of domain knowledge that cannot be encoded in
+Kubernetes. This isn't to say that it's not possible to deploy
+stateful systems to Kubernetes, or that "operable" stateful systems
+don't exist. But it is the case that as a community of practice we do
+not have a shared understanding of how to do this in a repeatable,
+reliable, and economical fashion. The closest things we have come from
+the observability space, such as runbooks and alerts, and they don't
+scale.
 
-A minimal operator comprises two components: a
-`CustomResourceDefinition` (`CRD`) and a controller that acts on
-instances of that `CRD`. An instance of a `CRD` is a Kubernetes
-resource more or less like any other: it includes standard
-`ObjectMeta` fields such as `Name`, `CreationTimestamp`,
-`ResourceVersion`, and `Generation` as well as, typically, `Spec` and
-`Status` fields whose definitions are up to the implementor.
+Operators are an answer to this problem. They are a tool for
+delivering and managing stateful systems running on Kubernetes. An
+operator is higher-level software that implements the behaviors to
+manage a stateful system in a robust manner on top of the Kubernetes
+runtime.
 
-<< example crd >>
+The heart of an operator is a controller. The controller periodically
+inspects "the world" and compares to a representation of the desired
+state of that world. If any action is necessary to make the world more
+closely reflect the desired state, the controller takes that action.
+This loop is performed in perpetuity. Think of a thermostat: every so
+often, it observes the state of "the world" - in this case, the
+ambient temperature - and compares it to the user's desired state of
+that world - say, seventy degrees Farenheit. If the world is too cold,
+the furnace is powered on. If the world is too hot, perhaps the
+furnace will be powered off. Some time later, the thermostat will
+inspect the state of the world again, compare to the user's desired
+state (perhaps seventy-one degrees this time!) and again take
+necessary action.
 
-A controller is a procedure that takes an instance of the `CRD` and
-optionall performs some action. It might create other resources, make
-an API call, reconfigure a database, or launch missiles. Beyond some
-very basic limitations, Kubernetes doesn't care.
 
-<< example controller >>
 
 That's it, really. "Operator" may imply big ideas about autonomous,
 self-healing distributed systems and thousands of SREs on the streets
