@@ -159,7 +159,73 @@ inspect the state of the world again, compare to the user's desired
 state (perhaps seventy-one degrees this time!) and again take
 necessary action.
 
+Despite the apparent triviality of the thermostat example it turns out
+that this pattern can be effectively applied to solve a broad range of
+systems management problems. This is not an accident; the
+fundamentals of controllers have been well-explored and systematized
+in the field of control theory which dates back to Maxwell in the
+nineteenth century. There's a big difference between an operator that
+provisions an object storage bucket and a PID controller that
+auto-tunes a pool of web servers, but the basic idea is pretty
+similar, once you've got a control theory lens on the world.
 
+In the context of of Kubernetes, a minimal operator comprises two
+components: a special type of resource called a
+~CustomResourceDefinition~, or ~CRD~ and a controller that uses
+instances of that ~CRD~ as the specification of the desired state of
+the world.
+
+An instance of a ~CRD~ is a Kubernetes resource like any other. It
+includes standard ~ObjectMeta~ fields such as ~Name~,
+~CreationTimestamp~, ~ResourceVersion~, and ~Generation~, as well as
+~Spec~ and ~Status~ fields whose underlying structure is in the hands
+of the implementor. For example, the manifest below defines a custom
+resource called "~Foo~ " in the ~programmingoperators.com/v1~ namespace:
+
+#+BEGIN_SRC yaml
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: foos.programmingoperators.com
+spec:
+  group: programmingoperators.com
+  names:
+    plural: foos
+    singular: foo
+    kind: Foo
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      subresources:
+        # status enables the status subresource.
+        status: {}
+#+END_SRC
+
+And here's a sample manifest of an instance of that ~CRD~:
+
+#+BEGIN_SRC yaml
+apiVersion: "programmingoperators.com/v1"
+kind: Foo
+metadata:
+  name: my-foo
+spec:
+  [ ... ]
+status:
+  [ ... ]
+#+END_SRC
+
+A controller associated with this resource uses the Kubernetes APIs to
+watch instances of ~foos.programmingoperators.com/v1~ and take action
+against "the world" when necessary. It might create or mutate other
+Kubernetes resources, reconfigure a database, or launch missiles;
+beyond some basic limitations, Kubernetes doesn't much care.
+
+#+BEGIN_SRC go
+func Sync(foo *v1.Foo) {
+    TODO
+}
+#+END_SRC
 
 That's it, really. "Operator" may imply big ideas about autonomous,
 self-healing distributed systems and thousands of SREs on the streets
@@ -168,18 +234,17 @@ big or as small as the role it needs to fill with a system.
 
 Most of the rest of this book is about how to turn this trivial
 example in to something worthwhile and useful. There's a lot to cover.
-To dip in just a bit deeper let's discuss two big ideas as a slight
-enhancement of this simplistic operator.
+To dip in just a bit deeper let's touch on two big ideas.
 
 The first is related to the fact that Operators exist at the behest of
 the Kubernetes API, and that API has very particular semantics. One of
 these semantics, and perhaps the most important for operator
 programmers, is that there is no way to observe every change to a
-resource. << EXAMPLE HERE >>. Whatever your operator needs to do, it
-neds to do based on the current state of the resource at any given
-time. This idea is sometimes called "level-triggering", and it's
-essential to writing operators that do what they say on the box. We'll
-be talking about it quite a bit.
+resource. Whatever your operator needs to do, it neds to do based on
+the current state of the resource at any given time. This idea is
+sometimes called "level-triggering", and it's essential to writing
+operators that do what they say on the box. We'll be talking about it
+quite a bit.
 
 The second big idea is convergence. Given a resource with a certain
 specification, the controller should eventually converge to a stable
@@ -189,8 +254,6 @@ controller should be working to align the state of the world with the
 state specified in the resources it manages. If that specified state
 changes - even before the world has been converged - the controller
 should start moving towards the new state.
-
-<< tie back to distributed systems >>
 
 ** Operator Frameworks                                              :CHAPTER:
 :PROPERTIES:
