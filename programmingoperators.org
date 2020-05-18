@@ -108,6 +108,66 @@ the projects here will continue to function for quite some time.
 :EXPORT_FILE_NAME: dist/02-what-is-an-operator
 :END:
 
+There has been an explosion in the world's collective dependence on
+software in the twenty-first century. "Software is eating the world",
+more and more. Our cars, our thermostats, our power grids, our
+communications, our businesses, our shopping - in many parts of the
+world it's difficult to find an aspect of modern life that doesn't
+depend deeply on software. "The Cloud" has compounded this phenomenon.
+Even a task as mundane and nonsocial as doing your taxes is typically
+done in a client-server model via a web browser instead of a
+standalone application, let alone visiting a brick-and-mortar office
+and talking to another human.
+
+These factors in turn put a greater burden on the shoulders of the
+developers and maintainers of this software. Modern software must be
+highly scalable and highly available. Economic concerns demand that
+this be done as cheaply as possible. Programmers are push to do more
+with less.
+
+Operators are a technology designed to reduce this burden by making it
+easier to automate management of systems - particularly those that
+resist automation by traditional means. They fill a gap in the average
+programmer's toolkit for managing distributed stateful systems at
+scale.
+
+You might wonder what makes operators special, why they're
+different from "traditional means", what that gap is, and how
+they fill it. To answer these questions, let's take a brief detour
+through the history of computer systems management and look at how we
+got here and what we may have left behind.
+
+*** A brief history of managing computer systems
+
+N.B.: what follows is a rational reconstruction; it is not intended to
+be a comprehensive history by any means. There are loads of great
+books out there on the history of computing and computers; this isn't
+one of them.
+
+**** Beginnings: early electromechanical machines
+
+The earliest days of modern computing are almost unrecognizable - no
+stored programs, no programming languages, no displays, machines that
+take up entire rooms - but the computers of the 1940s such as the
+Harvard Mark I and the ENIAC are unmistakably computers in the modern
+sense. The fact that they are so different from the world of the
+twenty-first century provides a useful starting point for our
+investigation. From a systems management perspective, several points
+are worth noting:
+
+- _Precision is important, too:_ In the context of the 1940s, one of
+  the key features of these early machines was their calculation
+  precision. The analog computers they replaced were precise only to
+  two or three significant digits. The Harvard Mark I could calculate
+  precisely to twenty-three digits. Unfortunately, unlike in modern
+  systems where failures typically manifest as availability loss,
+  component failure in an electromechanical computer could compromise
+  precision as well, resulting in silent corruption of results.
+
+- 
+
+*** Previous revision
+
 The modern consumer expects Internet services that are always-on,
 fast, and cheap. These expectations place a burden on the shoulders of
 implementors and operators of these services, to deliver them in an
