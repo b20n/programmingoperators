@@ -14,6 +14,123 @@
 <div id="content">
 <h1 class="title">What is an Operator?</h1>
 <p>
+There has been an explosion in the world's collective dependence on
+software in the twenty-first century. "Software is eating the world",
+more and more. Our cars, our thermostats, our power grids, our
+communications, our businesses, our shopping - in many parts of the
+world it's difficult to find an aspect of modern life that doesn't
+depend deeply on software. "The Cloud" has compounded this phenomenon.
+Even a task as mundane and nonsocial as doing your taxes is typically
+done in a client-server model via a web browser instead of a
+standalone application, let alone visiting a brick-and-mortar office
+and talking to another human.
+</p>
+
+<p>
+These factors in turn put a greater burden on the shoulders of the
+developers and maintainers of this software. Modern software must be
+highly scalable and highly available. Economic concerns demand that
+this be done as cheaply as possible. Programmers are push to do more
+with less.
+</p>
+
+<p>
+Operators are a technology designed to reduce this burden by making it
+easier to automate management of systems - particularly those that
+resist automation by traditional means. They fill a gap in the average
+programmer's toolkit for managing distributed stateful systems at
+scale.
+</p>
+
+<p>
+You might wonder what makes operators special, why they're
+different from "traditional means", what that gap is, and how
+they fill it. To answer these questions, let's take a brief detour
+through the history of computer systems management and look at how we
+got here and what we may have left behind.
+</p>
+
+<div id="outline-container-org3a35968" class="outline-2">
+<h2 id="org3a35968"><span class="section-number-2">1</span> A brief history of managing computer systems</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+N.B.: what follows is a rational reconstruction; it is not intended to
+be a comprehensive history by any means. There are loads of great
+books out there on the history of computing and computers; this isn't
+one of them.
+</p>
+</div>
+
+<div id="outline-container-org5d1e9f9" class="outline-3">
+<h3 id="org5d1e9f9"><span class="section-number-3">1.1</span> Beginnings: early electromechanical machines</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+The earliest days of modern computing are almost unrecognizable - no
+stored programs, no programming languages, no displays, machines that
+take up entire rooms - but the computers of the 1940s such as the
+Harvard Mark I and the ENIAC are unmistakably computers in the modern
+sense. The fact that they are so different from the world of the
+twenty-first century provides a useful starting point for our
+investigation. From a systems management perspective, several points
+are worth noting:
+</p>
+
+<ul class="org-ul">
+<li><span class="underline">Precision is important, too:</span> In the context of the 1940s, one of
+the key features of these early machines was their calculation
+precision. The analog computers they replaced were precise only to
+two or three significant digits. The Harvard Mark I could calculate
+precisely to twenty-three digits. Unfortunately, unlike in modern
+systems where failures typically manifest as availability loss,
+component failure in an electromechanical computer could compromise
+precision as well, resulting in silent corruption of results.</li>
+
+<li><span class="underline">Component failures really matter</span>: These machines had good reason
+to take up entire rooms. Without microchips, integrated circuits, or
+even transistors, they were composed of millions of discrete
+components, each subject to independent failure. There is an
+interesting distinction between the Harvard Mark I and the later
+ENIAC here. The Mark I engineers traded performance for reliability
+by using multipole relays in place of vacuum tubes, resulting in a
+machine that was able to operate nearly continuously for sixteen
+years. ENIAC, on the other hand, relied on nearly 18,000 vacuum
+tubes and rarely ran for more than a few days without blowing one
+out. It was a far faster machine, but only achieved approximately
+50% uptime.</li>
+
+<li><span class="underline">Sysadmins, too</span>: These machines were extremely expensive,
+specialized pieces of hardware, usually dedicated to military
+purposes. Access to them was tightly controlled. ENIAC, for example,
+was run by a very small team that developed both the programming
+techniques as well as sophisticated operational procedures such as
+"don't turn it off because it'll blow tubes when it boots up".</li>
+</ul>
+
+<p>
+Finally, no discussion of systems management on electromechanical
+copmuters would be complete without mentioning the Semi-Automatic
+Ground Environment, or SAGE. SAGE was a Cold War-era missile defense
+system designed to coordinate and aggregate radar data across North
+America. It composed hundreds of radar systems feedling data to a set
+of twenty four "Direction Centers". Every Direction Center housed a
+pair of AN/FSQ-7 computers each of which individually was the largest
+discrete computer ever built: it weighed 250 tons, required a 1
+megawatt power supply, housed 49,000 vacuum tubes. These machines
+operated 24x7 in an active/standby pair delivering 99.95% uptime. Data
+from radars across the continent was fed to the Direction Centers on
+phone lines at 1300 bps. From a management perspective SAGE was a
+landmark. Not only was it tackling harder problems by introducing
+network failures and their attendant distributed systems problems, it
+also set a higher bar in attempting to overcome them.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org61ae213" class="outline-2">
+<h2 id="org61ae213"><span class="section-number-2">2</span> Previous revision</h2>
+<div class="outline-text-2" id="text-2">
+<p>
 The modern consumer expects Internet services that are always-on,
 fast, and cheap. These expectations place a burden on the shoulders of
 implementors and operators of these services, to deliver them in an
@@ -149,8 +266,8 @@ beyond some basic limitations, Kubernetes doesn't much care.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-go"><span style="color: #00ff00;">func</span><span style="color: #000000;"> </span><span style="color: #0000ff;">Sync</span>(foo<span style="color: #000000;"> </span>*<span style="color: #ffff00;">v1.Foo</span>)<span style="color: #000000;"> </span>{
-<span style="color: #000000;">    </span>TODO
+<pre class="src src-go"><span style="color: #00ff00;">func</span><span style="color: #000000; background-color: #7f7f7f;"> </span><span style="color: #0000ff;">Sync</span>(foo<span style="color: #000000; background-color: #7f7f7f;"> </span>*<span style="color: #ffff00;">v1.Foo</span>)<span style="color: #000000; background-color: #7f7f7f;"> </span>{
+<span style="color: #cd00cd; background-color: #7f7f7f;">    </span>TODO
 }
 </pre>
 </div>
@@ -190,6 +307,8 @@ state specified in the resources it manages. If that specified state
 changes - even before the world has been converged - the controller
 should start moving towards the new state.
 </p>
+</div>
+</div>
 </div>
 </body>
 </html>
