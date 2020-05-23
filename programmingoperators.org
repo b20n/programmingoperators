@@ -200,6 +200,42 @@ landmark. Not only was it tackling harder problems by introducing
 network failures and their attendant distributed systems problems, it
 also set a higher bar in attempting to overcome them.
 
+*** Transistors and commercialization
+
+While some commercial machines did exist in the vacuum tube era the
+mass productionization of transistors in the early 1960s marked both
+the beginning of a boom in commercial computing and a revolution in
+systems reliability. With solid-state transistors replacing vacuum
+tubes at the core of the machines, reliability increased tremedously.
+The attendant revoluion in operational cost along with the diminished
+physical scale and capital requirements of the machines made computing
+available to a much wider audience than ever before. This led roughly
+down two paths. One, which we'll return to later on, starts with the
+TX-0 at MIT and proceeds through to the DEC PDPs and the Internet. The
+other, which we'll trace here, remains in the realm of "big iron"
+computing - impersonal business machines built along the lines of
+their first-generation predecessors but taking advantage of
+transistors' scale and reliability to achieve results far surpassing
+the electromechanical systems.
+
+These machines - for example, the IBM 7000 series and the CDC 6000
+series - were the first "mainframes"; some variants were the first to
+be labeled "supercomputers". Applications were still largely local and
+batch-oriented, not interactive. Administration of the systems was
+still a specialized task, solidifying the "high priesthood of
+computing" trope. Reliability concerns were still typically directed
+toward single-system uptime via component testing and local
+redundancy. Reliability across multiple systems was usually achieved by
+running identical workloads on active/active pairs of machines at
+great cost. This line of thinking - "I've got this one system running
+my application, make it as fast and reliable as possible" may seem
+quaint to today's programmers steeped in commodity hardware approaches
+to reliability, but in some circles it's still preached as high art -
+IBM does, after all, continue to produce new Z-series mainframes year
+after year.
+
+
+
 *** Previous revision
 
 The modern consumer expects Internet services that are always-on,
