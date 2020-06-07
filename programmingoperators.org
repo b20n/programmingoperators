@@ -200,7 +200,7 @@ landmark. Not only was it tackling harder problems by introducing
 network failures and their attendant distributed systems problems, it
 also set a higher bar in attempting to overcome them.
 
-*** Transistors and commercialization
+**** Transistors and commercialization
 
 While some commercial machines did exist in the vacuum tube era the
 mass productionization of transistors in the early 1960s marked both
@@ -234,7 +234,63 @@ to reliability, but in some circles it's still preached as high art -
 IBM does, after all, continue to produce new Z-series mainframes year
 after year.
 
+***** SABRE
 
+The overriding theme in second-generation/transistorized computing of
+qualitative change, not quantitative change: new technology reduced
+the cost of ownership of computers to the point that they became
+economical for businesses, so the sorts of computing activities
+performed for military and scientific purposes in the first generation
+were adapted to business problems. This played out writ large with
+SABRE, the "Semi-Automated Business Research Environment," whose name
+should be reminiscent of the "Semi-Automatic Ground Environment" -
+i.e., SAGE. (It seems that "SABE" didn't have the same ring to it).
+
+The seat reservation system at American Airlines in the 1950s was
+fundamentally unscalable. The entire process bottlenecked in a room
+with eight humans standing around a lazy susan in Little Rock,
+Arkansas, USA, and in the worst case it took upwards of three hours to
+reserve a seat. With air traffic rapidly growing, this situation was
+untenable. The obvious solution from IBM's perspective was to take the
+principles of SAGE and apply them to American's problem.
+
+SAGE was fundamentally a distributed system: a series of relatively
+dumb terminals networked to a centralized store of radar data. Replace
+radar readouts with reservation agents' terminals, and radar data with
+a seat reservation database and you can quickly get the idea behind
+SABRE. The first revision, deployed in 1960 at an unadjusted cost of
+more than $40 million, was built on the back of a pair of IBM 7090s,
+networked to more than 1000 reservation terminals in 50 cities via
+10,000 miles of leased lines.
+
+Reservation systems built on a similar architecture followed, and the
+pattern began to spread to other industries. Visa developed its
+electronic authorization and settlement systems, called BASE-I and
+BASE-II, in a similar architecture, though notably the "terminals" in
+BASE-I were actually DEC PDP-11s - far more powerful machines than the
+teletypes used by SABRE.
+
+With the development of these systems, system reliability became
+geographical problem impacting thousands or millions of consumers
+every day. The centralized computers in these systems were required by
+the businesses they supported to be available; Lamport's famous quip
+on distributed system - "[...] one in which the failure of a computer
+you didn’t even know existed can render your own computer unusable" -
+is nonsense before the advent of systems like SABRE and SAGE.
+
+Fast forward to the 21st century, and these systems - more more
+accurately, their descendants, are still in production. IBM's
+Transaction Processing Facility, the descendant of SABRE, is still in
+development and available to Z-series mainframe customers. In some
+ways this style of architecture seems like a dead end - it's really
+the antithesis of the currently dominant commodity approach to systems
+design - but there is much to be learned from it, especially for those
+interested in design and operations of stateful systems.
+
+
+
+
+**** A different path: consumer Internet and commodity hardware
 
 *** Previous revision
 
